@@ -108,8 +108,9 @@ app.post('/address', validateBearerToken, (req, res) => {
 
 });
 
-app.delete('/address/:id', validateBearerToken, (req, res) => {
+app.delete('/address/:addressId', validateBearerToken, (req, res) => {
   const { addressId } = req.params;
+  console.log(addressId);
 
   const index = addresses.findIndex( a => a.id === addressId);
 
