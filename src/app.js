@@ -20,20 +20,23 @@ app.use(helmet());
 
 const addresses = [];
 
+function validateBearerToken(req, res, next) {
+  const apiToken = process.env.API_TOKEN;
+  const authToken = req.get('Authorization');
+
+  if(!authToken || authToken.split(' ')[1] !== apiToken){
+    return res.status(401).json({ error: 'Unauthorized request' });
+  }
+
+  next();
+}
+
 app.get('/address', (req, res) => {
   res.json(addresses);
 });
 
-app.post('/address', (req, res) => {
-  const { 
-    firstName,
-    lastName,
-    address1,
-    address2='',
-    city,
-    state,
-    zip
-  } =req.body;
+app.post('/address', validateBearerToken, (req, res) => {
+  const { firstName, lastName, address1, address2='', city, state, zip } = req.body;
 
   if(!firstName) {
     return res
@@ -104,7 +107,7 @@ app.post('/address', (req, res) => {
 
 });
 
-app.delete('/address/:id', (req, res) => {
+app.delete('/address/:id', validateBearerToken, (req, res) => {
   const { addressId } = req.params;
 
   const index = addresses.findIndex( a => a.id === addressId);
