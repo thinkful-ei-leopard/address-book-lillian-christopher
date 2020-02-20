@@ -37,6 +37,7 @@ app.get('/address', (req, res) => {
 
 app.post('/address', validateBearerToken, (req, res) => {
   const { firstName, lastName, address1, address2='', city, state, zip } = req.body;
+  console.log(req.body)
 
   if(!firstName) {
     return res
